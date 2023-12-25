@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-      //  stage('Test') {
+        stage('Test') {
             steps {
                 sh 'ls -l index.html' // Simple check for index.html
             }
@@ -76,7 +76,7 @@ pipeline {
     }
 
     post {
-        failure {
+        success {
            emailext body: 'email sent out from jenkins', subject: 'test email', to: 'hassaan72773@gmail.com'
         }
     }
