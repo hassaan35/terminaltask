@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-    //  stage('Build') {
+      stage('Build') {
         steps {
           script {
             dockerImage = docker.build("meeyan/meeyan-cv:${env.BUILD_ID}")
@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
+      //  stage('Test') {
             steps {
                 sh 'ls -l index.html' // Simple check for index.html
             }
