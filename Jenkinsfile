@@ -54,7 +54,7 @@ pipeline {
                         sshPublisher(
                             publishers: [
                                 sshPublisherDesc(
-                                    configName: "AWS Assignment",
+                                    configName: "jenkins-demo",
                                     transfers: [sshTransfer(
                                         execCommand: """
                                             docker pull meeyan/meeyan-cv:${previousSuccessfulTag}
