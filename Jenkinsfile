@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-      stage('Build') {
+     // stage('Build') {
         steps {
           script {
             dockerImage = docker.build("meeyan/meeyan-cv:${env.BUILD_ID}")
