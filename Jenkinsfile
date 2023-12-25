@@ -5,7 +5,7 @@ pipeline {
       stage('Build') {
         steps {
           script {
-            dockerImage = docker.build("Meeyan/meeyan-cv:${env.BUILD_ID}")
+            dockerImage = docker.build("meeyan/meeyan-cv:${env.BUILD_ID}")
         }
     }
 }
@@ -35,7 +35,7 @@ pipeline {
                                 configName: "jenkins-demo", 
                                 transfers: [sshTransfer(
                                     execCommand: """
-                                        docker pull Meeyan/meeyan-cv:${env.BUILD_ID}
+                                        docker pull meeyan/meeyan-cv:${env.BUILD_ID}
                                         docker stop meeyan-cv-container || true
                                         docker rm meeyan-cv-container || true
                                         docker run -d --name meeyan-cv-container -p 80:80 meeyan/meeyan-cv:${env.BUILD_ID}
@@ -57,7 +57,7 @@ pipeline {
                                     configName: "AWS Assignment",
                                     transfers: [sshTransfer(
                                         execCommand: """
-                                            docker pull Meeyan/meeyan-cv:${previousSuccessfulTag}
+                                            docker pull meeyan/meeyan-cv:${previousSuccessfulTag}
                                             docker stop meeyan-cv-container || true
                                             docker rm meeyan-cv-container || true
                                             docker run -d --name meeyan-cv-container -p 80:80 Meeyan/meeyan-cv:${previousSuccessfulTag}
