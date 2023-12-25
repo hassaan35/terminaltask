@@ -5,7 +5,7 @@ pipeline {
       stage('Build') {
         steps {
           script {
-            dockerImage = docker.build("anasdaroo7/anas-cv:${env.BUILD_ID}")
+            dockerImage = docker.build("Meeyan/meeyan-cv:${env.BUILD_ID}")
         }
     }
 }
@@ -32,13 +32,13 @@ pipeline {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: "AWS Assignment", 
+                                configName: "jenkins-demo", 
                                 transfers: [sshTransfer(
                                     execCommand: """
-                                        docker pull anasdaroo7/anas-cv:${env.BUILD_ID}
-                                        docker stop anas-cv-container || true
-                                        docker rm anas-cv-container || true
-                                        docker run -d --name anas-cv-container -p 80:80 anasdaroo7/anas-cv:${env.BUILD_ID}
+                                        docker pull Meeyan/meeyan-cv:${env.BUILD_ID}
+                                        docker stop meeyan-cv-container || true
+                                        docker rm meeyan-cv-container || true
+                                        docker run -d --name meeyan-cv-container -p 80:80 meeyan/meeyan-cv:${env.BUILD_ID}
                                     """
                                 )]
                             )
@@ -57,10 +57,10 @@ pipeline {
                                     configName: "AWS Assignment",
                                     transfers: [sshTransfer(
                                         execCommand: """
-                                            docker pull anasdaroo7/anas-cv:${previousSuccessfulTag}
-                                            docker stop anas-cv-container || true
-                                            docker rm anas-cv-container || true
-                                            docker run -d --name anas-cv-container -p 80:80 anasdaroo7/anas-cv:${previousSuccessfulTag}
+                                            docker pull Meeyan/meeyan-cv:${previousSuccessfulTag}
+                                            docker stop meeyan-cv-container || true
+                                            docker rm meeyan-cv-container || true
+                                            docker run -d --name meeyan-cv-container -p 80:80 Meeyan/meeyan-cv:${previousSuccessfulTag}
                                         """
                                     )]
                                 )
@@ -78,7 +78,7 @@ pipeline {
     post {
         failure {
             mail(
-                to: 'm.anasdar336@gmail.com',
+                to: 'm.hassaan72773@gmail.com',
                 subject: "Failed Pipeline: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
                 body: "Something is wrong with the build ${env.BUILD_URL}"
             )
