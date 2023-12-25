@@ -77,11 +77,7 @@ pipeline {
 
     post {
         failure {
-            mail(
-                to: 'hassaan72773@gmail.com',
-                subject: "Failed Pipeline: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
-                body: "Something is wrong with the build ${env.BUILD_URL}"
-            )
+           emailext body: 'email sent out from jenkins', subject: 'test email', to: 'hassaan72773@gmail.com'
         }
     }
 }
