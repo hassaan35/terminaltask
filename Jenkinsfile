@@ -46,7 +46,7 @@ pipeline {
                     )
 
                   
-                    boolean isDeploymentSuccessful = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://52.62.107.252:80', returnStdout: true).trim() == '200'
+                    boolean isDeploymentSuccessful = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://13.211.147.129:80', returnStdout: true).trim() == '200'
 
                     if (!isDeploymentSuccessful) {
                        
