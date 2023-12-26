@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     stages {
-      stage('Build') {
-        steps {
-          script {
-            dockerImage = docker.build("meeyan/meeyan-cv:${env.BUILD_ID}")
+        stage('Build') {
+            steps {
+                script {
+                    dockerImage = docker.build("meeyan/personal-portfolio:${env.BUILD_ID}")
+                }
+            }
         }
-    }
-}
         stage('Push') {
             steps {
                 script {
@@ -21,63 +21,37 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'ls -l index.html' // Simple check for index.html
+                sh 'ls -l index.html' 
             }
         }
 
         stage('Deploy') {
             steps {
                 script {
-                    // Deploy the new version
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
                                 configName: "jenkins-demo", 
                                 transfers: [sshTransfer(
                                     execCommand: """
-                                        docker pull meeyan/meeyan-cv:${env.BUILD_ID}
-                                        docker stop meeyan-cv-container || true
-                                        docker rm meeyan-cv-container || true
-                                        docker run -d --name meeyan-cv-container -p 80:80 meeyan/meeyan-cv:${env.BUILD_ID}
+                                        docker pull meeyan/personal-portfolio:${env.BUILD_ID}
+                                        docker stop personal-portfolio-container || true
+                                        docker rm personal-portfolio-container || true
+                                        docker run -d --name personal-portfolio-container -p 80:80 meeyan/personal-portfolio:${env.BUILD_ID}
                                     """
                                 )]
                             )
                         ]
                     )
 
-                    // Check if deployment is successful
-                    boolean isDeploymentSuccessful = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http:// 3.26.23.252:80', returnStdout: true).trim() == '200'
-
-                    if (!isDeploymentSuccessful) {
-                        // Rollback to the previous version
-                        def previousSuccessfulTag = readFile('previous_successful_tag.txt').trim()
-                        sshPublisher(
-                            publishers: [
-                                sshPublisherDesc(
-                                    configName: "jenkins-demo",
-                                    transfers: [sshTransfer(
-                                        execCommand: """
-                                            docker pull meeyan/meeyan-cv:${previousSuccessfulTag}
-                                            docker stop meeyan-cv-container || true
-                                            docker rm meeyan-cv-container || true
-                                            docker run -d --name meeyan-cv-container -p 80:80 Meeyan/meeyan-cv:${previousSuccessfulTag}
-                                        """
-                                    )]
-                                )
-                            ]
-                        )
-                    } else {
-                        // Update the last successful tag
-                        writeFile file: 'previous_successful_tag.txt', text: "${env.BUILD_ID}"
-                    }
-                }
-            }
-        }
-    }
-
+                    
     post {
         failure {
-           emailext body: 'email sent out from jenkins', subject: 'test email', to: 'hassaan72773@gmail.com'
+            mail(
+                to: 'fa20-bse-038@cuiatk.edu.pk',
+                subject: "Failed Pipeline: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+                body: "Something is wrong with the build ${env.BUILD_URL}"
+            )
         }
     }
 }
