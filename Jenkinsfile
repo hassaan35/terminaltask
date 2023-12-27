@@ -78,7 +78,7 @@ pipeline {
     post {
         failure {
             mail(
-                to: 'fa20-bse-038@cuiatk.edu.pk',
+                to: 'fa20-bse-065@cuiatk.edu.pk',
                 subject: "Failed Pipeline: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
                 body: """Something is wrong with the build ${env.BUILD_URL}
                 Rolling back to the previous version
